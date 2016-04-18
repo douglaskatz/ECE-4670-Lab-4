@@ -15,18 +15,13 @@ for n=1:100000/dataLength
        end
     end
 
-    % Pad X1 with 0 at beginning for DC part and its hermetian conjugate at
-    % the end
-    X0 = [0, X1, X1'];
-    
+    % Pad X1 with 0 for DC and n/2 and concatenate with X1* to get X0
+
     % Multiply by iDFT matrix to get x0.
-    x0 = dft(length(X1))'*X1;
-    
+
     % Prepend cyclic prefix to get x which will be sent through the channel.
-    x = [x0(dataLength-(kc):datalength), x0];
-    % Add symbol to vector that will be transmitted and add guard band
-    tx = [tx, x];
+
 end
 %put all symbols together
-wavwrite(tx, 96000, 24, 'tx.wav');
+tx = [tx, x. 
 end
