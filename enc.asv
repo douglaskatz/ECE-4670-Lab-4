@@ -1,27 +1,44 @@
 function tx = enc(bits)
 kc = 0; % number of samples for channel to return to 0
-gammak = 0; % peak amplitude for OOK
-preLength = 0; % how long the cyclic prefix should be
-dataLength = 0; % how long each data block should be
+gammak = 1; % peak amplitude for OOK
+dataLength = 10; % how long each data block should be
+tx=[];
+% Training block X1[k] = gamma*exp(-jpi/2)
+% for(n=1:dataLength)
+%     X1(n) = -gammak*i;
+%     
+% end
 
-for n=1:100000/dataLength
+for n=1:100/dataLength
     % Modulate bits independently onto the real and imaginary parts of each
     % sample to get X1.
-    for i=n:n*dataLength
-       if(bits(i) == 0)
-           X1(i) = 0;
+    for ind= ((n-1)*dataLength)+1:n*dataLength
+       if(bits(ind) == 0)
+           X1(ind) = 0;
        else
-           X1(i) = 1i*gammak;
+           X1(ind) = i*gammak;
        end
     end
 
-    % Pad X1 with 0 for DC and n/2 and concatenate with X1* to get X0
-
+    % Pad X1 with 0 at beginning for DC part and its hermetian conjugate at
+    % the end
+    
+    X0 = [X1, 0, fliplr(conj(X1))];
+    
+    disp('X1');
+    disp(X1);
+    
+    disp('flipped X1');
+    disp(fliplr(conj(X1)));
+    
     % Multiply by iDFT matrix to get x0.
-
+    x0 = dftmtx(length(X0))'*transpose(X0);
+    
     % Prepend cyclic prefix to get x which will be sent through the channel.
-
+    x = [x0(dataLength-(kc):dataLength); x0];
+    % Add symbol to vector that will be transmitted and add guard band
+    tx = [tx; x];
 end
 %put all symbols together
-tx = [tx, x. 
+%wavwrite(tx, 96000, 24, 'tx.wav');
 end
