@@ -23,8 +23,8 @@ end
 X0 = [0, X1, 0, fliplr(conj(X1))];
 
 % Multiply by iDFT matrix to get x0.
-x0 = conj(dftmtx(length(X0)))/length(X0)*transpose(X0);
-
+%x0 = conj(dftmtx(length(X0)))/length(X0)*transpose(X0);
+x0 = ifft(transpose(X0));
 x0 = real(x0); % get rid of tiny imaginary parts
 
 % Prepend cyclic prefix to get x which will be sent through the channel.
