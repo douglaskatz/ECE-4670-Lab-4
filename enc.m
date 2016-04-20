@@ -1,5 +1,5 @@
 function tx = enc(bits)
-kc = 40; % number of samples for channel to return to 0
+kc = 200; % number of samples for channel to return to 0
 gammak = 1; % peak amplitude for OOK
 inputLength = length(bits); % how long each data block should be
 % Training block X1[k] = gamma*exp(-jpi/2)
@@ -29,7 +29,7 @@ x0 = real(x0); % get rid of tiny imaginary parts
 
 % Prepend cyclic prefix to get x which will be sent through the channel.
 tx = [x0(mod(length(x0)-kc:length(x0)-1,length(x0))+1); x0];
-    
+
 %put all symbols together
 wavwrite(tx, 96000, 24, 'tx.wav');
 end
